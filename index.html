@@ -1,0 +1,1520 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>발마사지 김세은 · 알 이즈 웰 74초</title>
+<style>
+    html, body { width:100%; height:100%; margin:0; overflow:hidden; background:#08030b; }
+    #taiko-game-root, #taiko-game-root * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        user-select: none;
+        -webkit-user-select: none;
+        touch-action: none;
+    }
+
+    #taiko-game-root {
+        width: 100%;
+        height: 100%;
+        min-height: 600px;
+        background: radial-gradient(circle at 50% 0%, #7a1230 0%, #4a0a1f 45%, #2b0614 100%);
+        background-image:
+            radial-gradient(circle at 15% 20%, rgba(255,215,0,0.10) 0px, transparent 6px),
+            radial-gradient(circle at 80% 15%, rgba(255,153,51,0.10) 0px, transparent 6px),
+            radial-gradient(circle at 30% 80%, rgba(0,168,150,0.10) 0px, transparent 6px),
+            radial-gradient(circle at 70% 70%, rgba(255,215,0,0.08) 0px, transparent 6px),
+            radial-gradient(circle at 50% 0%, #7a1230 0%, #4a0a1f 45%, #2b0614 100%);
+        background-size: 60px 60px, 70px 70px, 65px 65px, 55px 55px, 100% 100%;
+        color: #fff;
+        font-family: sans-serif;
+        overflow: hidden;
+        position: relative;
+    }
+
+    #game-container {
+        width: 100%;
+        max-width: none;
+        height: 100vh;
+        min-height: 640px;
+        margin: 0 auto;
+        background: linear-gradient(180deg, rgba(40,8,20,0.7), rgba(20,4,10,0.85));
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        border-left: 3px solid rgba(255,215,0,0.35);
+        border-right: 3px solid rgba(255,215,0,0.35);
+    }
+
+    #header {
+        text-align: center;
+        padding: 15px 10px 12px;
+        background: linear-gradient(135deg, #8a0f2e 0%, #c2410c 55%, #d4941f 100%);
+        border-bottom: 4px solid #ffd700;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.5);
+        position: relative;
+    }
+    #header::after {
+        content: '✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿';
+        display: block;
+        font-size: 0.55rem;
+        letter-spacing: 2px;
+        color: rgba(255,255,255,0.55);
+        margin-top: 8px;
+        overflow: hidden;
+        white-space: nowrap;
+    }
+
+    #taiko-game-root h2 {
+        font-size: 1.15rem;
+        color: #fff8dc;
+        text-shadow: 0 0 8px #ffb703, 0 2px 3px rgba(0,0,0,0.6);
+        margin-bottom: 6px;
+        letter-spacing: 0.5px;
+    }
+    #score-board { display: flex; justify-content: space-around; font-size: 0.9rem; font-weight: bold; }
+    #current-diff { color: #2dd4bf; text-shadow: 0 0 6px rgba(45,212,191,0.6); }
+    #song-progress-wrap {
+        width: 100%;
+        height: 7px;
+        background: rgba(0,0,0,0.4);
+        margin-top: 8px;
+        border-radius: 4px;
+        overflow: hidden;
+        border: 1px solid rgba(255,215,0,0.4);
+    }
+    #song-progress-bar {
+        height: 100%;
+        width: 0%;
+        background: linear-gradient(90deg, #ff6a00, #ffd700, #ff2d95);
+        transition: width 0.1s linear;
+    }
+    #song-time {
+        font-size: 0.7rem;
+        color: rgba(255,255,255,0.65);
+        margin-top: 4px;
+        text-align: center;
+    }
+
+    #taiko-lane {
+        position: relative;
+        width: 100%;
+        height: 170px;
+        background:
+            repeating-linear-gradient(135deg, rgba(255,215,0,0.05) 0px, rgba(255,215,0,0.05) 10px, transparent 10px, transparent 20px),
+            linear-gradient(180deg, #3a0d1c, #250912);
+        margin-top: 20px;
+        border-top: 4px solid #ffb703;
+        border-bottom: 4px solid #ffb703;
+    }
+
+    #target-zone {
+        position: absolute;
+        left: 50px;
+        top: 26px;
+        width: 120px;
+        height: 120px;
+        border: 5px dashed #ffd700;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(255,215,0,0.18), rgba(255,45,149,0.08));
+        box-shadow: 0 0 16px rgba(255,215,0,0.6), inset 0 0 10px rgba(255,45,149,0.4);
+        z-index: 5;
+        animation: mandalaSpin 6s linear infinite;
+    }
+    @keyframes mandalaSpin {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
+
+    .note {
+        position: absolute;
+        top: 26px;
+        width: 130px;
+        height: 130px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 27px;
+        font-weight: bold;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+        z-index: 2;
+    }
+    .note.left-lane, .note.right-lane, .note.both-lane {
+        background-image:url('foot-note-sprites.png'); background-repeat:no-repeat; background-size:400% 100%;
+        border:0; color:transparent; box-shadow:0 4px 14px rgba(0,0,0,.55); overflow:hidden;
+    }
+    .note.left-lane { background-position:0% 50%; }
+    .note.right-lane { background-position:33.333% 50%; }
+    .note.both-lane { background-position:66.666% 50%; }
+    .note.roll-lane { width:380px; height:130px; border-radius:65px; background:linear-gradient(90deg,#7c3aed,#ff2d95 45%,#ffb703); color:#fff; border:4px solid #fff; font-size:27px; letter-spacing:0; padding-left:128px; text-shadow:0 2px 4px #4a0a1f; overflow:hidden; }
+    .note.roll-lane::before { content:''; position:absolute; left:0; top:0; width:130px; height:130px; border-radius:50%; background-image:url('foot-note-sprites.png'); background-repeat:no-repeat; background-size:400% 100%; background-position:100% 50%; }
+
+    #judge-text {
+        width: 100%;
+        text-align: center;
+        font-size: 1.4rem;
+        font-weight: bold;
+        margin-top: 20px;
+        height: 40px;
+        text-shadow: 0 0 6px rgba(0,0,0,0.6);
+    }
+
+    #drum-container {
+        margin-top: auto;
+        margin-bottom: 40px;
+        width: 100%;
+        display: flex;
+        justify-content: space-around;
+        padding: 0 clamp(20px,8vw,130px);
+    }
+
+    .taiko-drum {
+        width: clamp(130px,13vw,190px);
+        height: clamp(130px,13vw,190px);
+        border-radius: 50%;
+        background-image:url('foot-note-sprites.png');
+        background-repeat:no-repeat;
+        background-size:400% 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        font-size: 0;
+        box-shadow: 0 8px 0 #6b0a1c, 0 0 0 4px rgba(255,215,0,0.35), 0 0 18px rgba(255,153,51,0.5);
+        cursor: pointer;
+        border: 8px solid #ffd700;
+        position: relative;
+    }
+
+    #drum-left { border-color: #57dcff; background-position:0% 50%; }
+    #drum-left.active { transform: translateY(4px) scale(.97); box-shadow: 0 4px 0 #075985, 0 0 26px #57dcff; filter:brightness(1.25); }
+
+    #drum-right { border-color: #ff8a3d; background-position:33.333% 50%; }
+    #drum-right.active { transform: translateY(4px) scale(.97); box-shadow: 0 4px 0 #9a3412, 0 0 26px #ff8a3d; filter:brightness(1.25); }
+
+    .drum-label {
+        font-size: 0.7rem;
+        color: #fff8dc;
+        font-weight: bold;
+        margin-top: 5px;
+        background: rgba(74,10,31,0.75);
+        padding: 2px 8px;
+        border-radius: 10px;
+        border: 1px solid rgba(255,215,0,0.5);
+    }
+    #drum-both { border-color:#ef7cff; background-position:66.666% 50%; transform:scale(.9); }
+    #drum-both.active { transform:translateY(4px) scale(.87); box-shadow:0 4px 0 #701a75,0 0 28px #ef7cff; filter:brightness(1.25); }
+
+    #start-overlay, #end-overlay, #loading-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background:
+            radial-gradient(circle at 20% 15%, rgba(255,215,0,0.10) 0px, transparent 7px),
+            radial-gradient(circle at 75% 25%, rgba(255,153,51,0.10) 0px, transparent 7px),
+            radial-gradient(circle at 30% 80%, rgba(45,212,191,0.10) 0px, transparent 7px),
+            radial-gradient(circle at 80% 75%, rgba(255,45,149,0.08) 0px, transparent 7px),
+            linear-gradient(160deg, #5a0d24 0%, #2b0614 100%);
+        background-size: 60px 60px, 70px 70px, 65px 65px, 55px 55px, 100% 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+        padding: 20px;
+        text-align: center;
+    }
+
+    #end-overlay { display: none; }
+    #loading-overlay { display: none; }
+
+    .diff-btn {
+        width: 80%;
+        max-width: 280px;
+        padding: 16px;
+        margin: 8px 0;
+        font-size: 1.2rem;
+        font-weight: bold;
+        border: 2px solid #ffd700;
+        border-radius: 30px;
+        cursor: pointer;
+        color: #fff;
+        box-shadow: 0 5px 0 rgba(0,0,0,0.35), 0 0 14px rgba(255,215,0,0.35);
+        text-align: center;
+        display: block;
+    }
+    #player-name {
+        width: 80%;
+        max-width: 280px;
+        padding: 12px 16px;
+        margin-bottom: 6px;
+        font-size: 1rem;
+        border-radius: 24px;
+        border: 2px solid #ffb703;
+        background: rgba(74,10,31,0.6);
+        color: #fff8dc;
+        text-align: center;
+        outline: none;
+    }
+    #player-name::placeholder { color: rgba(255,248,220,0.5); }
+    #player-name:focus { border-color: #ffd700; box-shadow: 0 0 10px rgba(255,215,0,0.5); }
+    #name-warning {
+        color: #ff6b8a;
+        font-size: 0.8rem;
+        margin-bottom: 16px;
+        height: 16px;
+        visibility: hidden;
+    }
+    #name-warning.show { visibility: visible; }
+
+    #hardware-panel {
+        width: 80%;
+        max-width: 300px;
+        margin: 8px auto 12px;
+        padding: 10px;
+        border: 1px solid rgba(255,215,0,0.45);
+        border-radius: 10px;
+        background: rgba(0,0,0,0.24);
+        color: #fff8dc;
+        font-size: 0.78rem;
+        line-height: 1.4;
+    }
+    #hardware-connect-btn {
+        width: 100%;
+        margin-top: 7px;
+        padding: 9px 10px;
+        border: 2px solid #2dd4bf;
+        border-radius: 8px;
+        background: rgba(45,212,191,0.12);
+        color: #b7fff4;
+        font-weight: bold;
+        cursor: pointer;
+    }
+    #hardware-connect-btn:active { transform: scale(0.98); }
+    #hardware-status {
+        display: block;
+        margin-top: 6px;
+        color: #2dd4bf;
+        font-size: 0.72rem;
+    }
+
+    #length-select {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 16px;
+        width: 80%;
+        max-width: 280px;
+    }
+    .length-btn {
+        flex: 1;
+        padding: 10px 6px;
+        font-size: 0.85rem;
+        font-weight: bold;
+        border: 2px solid rgba(255,215,0,0.4);
+        border-radius: 20px;
+        background: rgba(74,10,31,0.6);
+        color: rgba(255,248,220,0.6);
+        cursor: pointer;
+    }
+    .length-btn.active {
+        border-color: #ffd700;
+        background: rgba(255,215,0,0.18);
+        color: #ffd700;
+        box-shadow: 0 0 10px rgba(255,215,0,0.4);
+    }
+
+    .diff-btn:disabled { opacity: 0.5; }
+
+    #btn-easy { background: linear-gradient(135deg, #16a085, #0d9488); }
+    #btn-normal { background: linear-gradient(135deg, #ff9933, #d4941f); color: #3a0d1c; }
+    #btn-hard { background: linear-gradient(135deg, #e0114a, #8a0f2e); }
+
+    #auto-return-note {
+        margin-top: 12px;
+        font-size: 0.7rem;
+        color: #666;
+        font-family: monospace;
+    }
+
+    /* ===== Arcade game-over / ranking screen ===== */
+    @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+    #end-overlay {
+        background: #000;
+        background-image:
+            repeating-linear-gradient(0deg, rgba(255,255,255,0.03) 0px, rgba(255,255,255,0.03) 1px, transparent 1px, transparent 3px);
+    }
+
+    #arcade-screen {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        padding: 22px 10px 16px;
+        font-family: 'Press Start 2P', monospace;
+        color: #ffe81f;
+        overflow-y: auto;
+    }
+
+    #arcade-title {
+        font-size: clamp(2.2rem, 11vw, 3.2rem);
+        color: #ff3b3b;
+        text-shadow: 0 0 12px #ff3b3b, 0 0 24px #ff3b3b;
+        letter-spacing: 2px;
+        margin-bottom: 16px;
+        animation: arcadeBlink 1s steps(1) infinite;
+    }
+    #arcade-newrecord {
+        font-size: clamp(1.1rem, 5.5vw, 1.5rem);
+        color: #39ff14;
+        text-shadow: 0 0 10px #39ff14;
+        margin-bottom: 18px;
+        animation: arcadeBlink 0.5s steps(1) infinite;
+        display: none;
+    }
+    #arcade-newrecord.show { display: block; }
+
+    #arcade-player {
+        font-size: clamp(1rem, 5vw, 1.3rem);
+        color: #00e5ff;
+        text-shadow: 0 0 8px #00e5ff;
+        margin-bottom: 20px;
+        letter-spacing: 1px;
+    }
+
+    #arcade-score-huge {
+        width: 100%;
+        max-width: 420px;
+        text-align: center;
+        margin-bottom: 24px;
+    }
+    #arcade-score-huge .score-label {
+        font-size: clamp(1rem, 5vw, 1.3rem);
+        color: #ff3b3b;
+        letter-spacing: 3px;
+        margin-bottom: 10px;
+    }
+    #arcade-score-huge #res-score {
+        font-size: clamp(2.6rem, 15vw, 4.2rem);
+        color: #ffe81f;
+        text-shadow: 0 0 14px #ffe81f, 0 0 30px #ffb700;
+        letter-spacing: 4px;
+        line-height: 1.1;
+    }
+
+    #arcade-stats {
+        width: 100%;
+        max-width: 420px;
+        margin-bottom: 24px;
+    }
+    .arcade-stat-row {
+        display: flex;
+        justify-content: space-between;
+        font-size: clamp(1rem, 5vw, 1.35rem);
+        padding: 12px 8px;
+        color: #ffe81f;
+        border-bottom: 1px dashed #444;
+    }
+    .arcade-stat-row span:last-child { color: #fff; }
+
+    #arcade-rank-title {
+        font-size: clamp(1.2rem, 6vw, 1.6rem);
+        color: #ff3b3b;
+        margin-bottom: 16px;
+        letter-spacing: 1px;
+    }
+    #arcade-rank-list {
+        width: 100%;
+        max-width: 420px;
+        max-height: 320px;
+        overflow-y: auto;
+        margin-bottom: 24px;
+        border-top: 2px dashed #444;
+    }
+    .arcade-rank-loading {
+        font-size: 1rem;
+        color: #888;
+        text-align: center;
+        padding: 16px 0;
+    }
+    .arcade-rank-row {
+        display: flex;
+        align-items: center;
+        font-size: clamp(1rem, 5vw, 1.35rem);
+        padding: 11px 6px;
+        color: #eee;
+    }
+    .arcade-rank-row .ar-rank { width: 50px; color: #00e5ff; }
+    .arcade-rank-row .ar-name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding-right: 8px; }
+    .arcade-rank-row .ar-score { text-align: right; color: #ffe81f; }
+    .arcade-rank-row.me {
+        color: #39ff14;
+        background: rgba(57,255,20,0.08);
+        animation: arcadeBlink 0.8s steps(1) infinite;
+    }
+    .arcade-rank-row.me .ar-rank,
+    .arcade-rank-row.me .ar-score { color: #39ff14; }
+
+    #restart-btn {
+        font-family: 'Press Start 2P', monospace;
+        background: #000;
+        color: #ffe81f;
+        border: 3px solid #ffe81f;
+        border-radius: 0;
+        box-shadow: none;
+        padding: 18px 24px;
+        font-size: clamp(0.95rem, 4.5vw, 1.2rem);
+        margin-top: 8px;
+        animation: arcadeBlink 1s steps(1) infinite;
+    }
+
+    @keyframes arcadeBlink {
+        0%, 49% { opacity: 1; }
+        50%, 100% { opacity: 0.25; }
+    }
+
+    .spinner {
+        width: 40px;
+        height: 40px;
+        border: 5px solid #444;
+        border-top: 5px solid #ffd700;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin-bottom: 15px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    #taiko-game-root {
+        min-height: 100vh;
+        background: linear-gradient(rgba(35,8,20,.76), rgba(11,8,28,.9)), url('인도 발마사지 사진.png') center/cover fixed !important;
+    }
+    #taiko-game-root:fullscreen, #taiko-game-root.game-fullscreen {
+        width: 100vw; height: 100vh; min-height: 100vh;
+    }
+    #taiko-game-root:fullscreen #game-container, #taiko-game-root.game-fullscreen #game-container {
+        max-width: none; width: 100%; height: 100vh; min-height: 100vh;
+    }
+    #culture-video-intro {
+        position: fixed; inset: 0; z-index: 10000; display: flex; align-items: center; justify-content: center;
+        background: #08030b; color: #fff; overflow: hidden;
+    }
+    #culture-video-intro video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: .62; }
+    .culture-intro-card {
+        position: relative; z-index: 1; width: min(760px, 90vw); padding: clamp(24px,4vw,48px);
+        text-align: center; border: 2px solid #ffd15c; border-radius: 28px;
+        background: rgba(20,8,28,.78); box-shadow: 0 20px 80px #000; backdrop-filter: blur(5px);
+    }
+    .culture-intro-card h1 { color:#ffd15c; font-size:clamp(1.8rem,5vw,3.2rem); margin-bottom:18px; }
+    .culture-intro-card p { font-size:clamp(.95rem,2.2vw,1.2rem); line-height:1.8; }
+    #culture-intro-next { margin-top:24px; padding:14px 32px; border:0; border-radius:999px; background:#ffd15c; color:#3b1024; font-weight:900; font-size:1rem; cursor:pointer; }
+    #culture-intro-next { display:none; }
+    .culture-intro-card.playing { opacity:0; pointer-events:none; transition:opacity .35s ease; }
+    #dancer-stage { position:absolute; inset:auto 0 112px; height:150px; z-index:2; pointer-events:none; display:flex; align-items:flex-end; justify-content:space-around; overflow:hidden; }
+    .india-dancer { display:none; width:90px; height:130px; background-image:url('india-dance-sprites.png'); background-size:500% 200%; filter:drop-shadow(0 8px 7px rgba(0,0,0,.7)); animation:danceHop .7s ease-in-out infinite alternate; }
+    .india-dancer.show { display:block; }
+    .india-dancer:nth-child(1){background-position:0 0}.india-dancer:nth-child(2){background-position:25% 0}.india-dancer:nth-child(3){background-position:50% 0}.india-dancer:nth-child(4){background-position:75% 0}.india-dancer:nth-child(5){background-position:100% 0}
+    .india-dancer:nth-child(6){background-position:0 100%}.india-dancer:nth-child(7){background-position:25% 100%}.india-dancer:nth-child(8){background-position:50% 100%}.india-dancer:nth-child(9){background-position:75% 100%}.india-dancer:nth-child(10){background-position:100% 100%}
+    .india-dancer:nth-child(even){animation-delay:-.35s}
+    @keyframes danceHop { from{transform:translateY(4px) rotate(-4deg)} to{transform:translateY(-8px) rotate(4deg)} }
+    @media(max-width:700px){.india-dancer{width:9vw;height:90px}.culture-intro-card{width:92vw}}
+    @media(min-width:1000px){#taiko-lane{height:190px}.note{top:36px}#target-zone{top:36px}.drum-label{font-size:.9rem}#judge-text{font-size:1.8rem}}
+    .pranam-guide {
+        width: min(440px, 92%); margin: 0 auto 14px; padding: 13px 16px;
+        color: #fff6dc; background: rgba(22, 9, 35, .78);
+        border: 1px solid rgba(255, 209, 92, .72); border-radius: 14px;
+        font-size: .82rem; line-height: 1.65; text-align: left;
+        box-shadow: inset 0 0 18px rgba(255, 193, 7, .06);
+    }
+    .pranam-guide strong { color: #ffd15c; }
+
+/* Massage story and input reaction */
+#massage-stage { position:relative; flex:1; min-height:100px; margin:8px auto; width:min(100%,1000px); overflow:hidden; border-radius:18px; background:#24160d; border:2px solid #c69948; }
+#massage-stage .massage-frame { position:absolute; inset:0; width:100%; height:100%; object-fit:contain; }
+#massage-reaction { opacity:0; }
+#massage-stage.reacting #massage-reaction { opacity:1; }
+#massage-caption { position:absolute; bottom:8px; left:50%; transform:translateX(-50%); padding:6px 16px; border-radius:20px; background:rgba(34,18,9,.85); color:#fff3cf; font-size:clamp(.75rem,1.5vw,1rem); white-space:nowrap; }
+#judge-text { margin-top:8px; height:30px; flex-shrink:0; }
+#drum-container { margin-top:6px; margin-bottom:24px; flex-shrink:0; }
+#dancer-stage { height:90px; bottom:125px; opacity:.6; }
+#game-container { min-height:100vh; }
+#end-overlay { flex-direction:row; gap:24px; background:radial-gradient(ellipse at top,#72491c,#211109); padding:20px; }
+#ending-story { flex:1; min-width:0; color:#fff4cf; }
+#ending-story img { width:100%; max-height:70vh; object-fit:contain; border-radius:20px; border:2px solid #ffd15c; box-shadow:0 0 35px #e8ac3b55; }
+#ending-story h3 { font-size:clamp(1.3rem,2.8vw,2.3rem); margin:12px 0 8px; color:#ffe28b; }
+#ending-story p { line-height:1.6; font-size:clamp(.9rem,1.5vw,1.2rem); }
+#end-overlay #arcade-screen { width:36%; max-width:470px; height:100%; border-radius:20px; background:rgba(0,0,0,.65); padding:18px; }
+#end-overlay #arcade-title { font-size:clamp(1.2rem,2.2vw,2rem); color:#ffe28b; text-shadow:0 0 12px #b68224; animation:none; }
+#end-overlay #arcade-stats { margin-bottom:12px; }
+#end-overlay .arcade-stat-row { padding:7px; font-size:1rem; }
+#end-overlay #arcade-rank-list { flex-shrink:0; max-height:180px; }
+#end-overlay #arcade-player { font-size:.9rem; margin-bottom:12px; }
+#end-overlay #auto-return-note { color:#e1c991; }
+#end-overlay[style*="flex"] #ending-story { animation:cleanReveal .85s ease-out both; }
+@keyframes cleanReveal { from { opacity:0; transform:translateY(12px) scale(.97); filter:brightness(.6); } to { opacity:1; transform:none; filter:brightness(1); } }
+@media(max-width:700px) {
+ #end-overlay { flex-direction:column; justify-content:flex-start; overflow-y:auto; gap:14px; }
+ #ending-story { flex:none; width:100%; }
+ #ending-story img { max-height:40vh; }
+ #end-overlay #arcade-screen { width:100%; max-width:none; height:auto; overflow:visible; flex-shrink:0; }
+ #massage-stage { border-radius:10px; }
+ #drum-container { margin-bottom:20px; padding:0 8px; }
+ .taiko-drum { width:28vw; height:28vw; max-width:130px; max-height:130px; }
+}
+@media(prefers-reduced-motion:reduce) { #ending-story { animation:none!important; } }
+
+
+/* Larger scene, compact rhythm controls */
+#header { padding:7px 10px 6px; flex-shrink:0; }
+#header::after { display:none; }
+#header h2 { font-size:1rem; margin-bottom:3px; }
+#taiko-lane { height:140px; flex:0 0 140px; }
+.note,#target-zone { top:0; }
+#judge-text { margin-top:3px; height:28px; font-size:1.2rem; }
+#massage-stage { width:100%; margin:3px auto; border-radius:10px; }
+#drum-container { margin:4px 0 18px; }
+.taiko-drum { width:110px; height:110px; }
+.drum-label { font-size:.7rem; }
+#dancer-stage { display:none; }
+@media(max-width:700px) { .taiko-drum { width:25vw; height:25vw; max-width:110px; max-height:110px; } #header h2 { font-size:.85rem; } }
+
+</style>
+</head>
+<body>
+
+<div id="culture-video-intro">
+    <video id="culture-intro-video" src="인도 발마사지 영상.mp4" preload="auto" autoplay muted playsinline></video>
+    <div class="culture-intro-card">
+        <h1>세계의 효 : 인도(프리남)</h1>
+        <p><strong>프리남(Pranam)</strong>은 두 손을 모으고 몸을 숙여 존경을 전하는 인도의 인사 문화입니다.<br>어른의 발을 만지는 행동에는 부모와 스승께 감사와 축복을 구하는 마음이 담겨 있습니다.<br>영상을 본 뒤, 인도 대표 영화 음악의 리듬에 맞춰 발마사지 게임을 즐겨 보세요.</p>
+        <button id="culture-intro-next" type="button">게임 준비 화면으로</button>
+    </div>
+</div>
+
+<div id="taiko-game-root">
+    <div id="game-container">
+        <div id="dancer-stage" aria-hidden="true">
+            <i class="india-dancer"></i><i class="india-dancer"></i><i class="india-dancer"></i><i class="india-dancer"></i><i class="india-dancer"></i>
+            <i class="india-dancer"></i><i class="india-dancer"></i><i class="india-dancer"></i><i class="india-dancer"></i><i class="india-dancer"></i>
+        </div>
+        <div id="start-overlay">
+            <div style="font-size:0.7rem; letter-spacing:3px; color:#ffb703; margin-bottom:8px;">✦ ✦ ✦ ✦ ✦ ✦ ✦ ✦ ✦</div>
+            <h3 style="color:#ffd700; text-shadow:0 0 12px rgba(255,215,0,0.7); margin-bottom:10px; font-size:1.5rem;">🪔 알 이즈 웰! 리듬 게임 🪔</h3>
+            <p style="text-align:center; font-size:0.9rem; line-height:1.5; margin-bottom:15px; color:#f3e3d3; padding: 0 15px;">
+                실제 <strong style="color:#ffd166;">'Aal Izz Well'</strong> 음원 박자에 맞춰 노트가 나와요!<br>
+                쉬움은 천천히 한 번씩! 어느 쪽 북을 쳐도 좋아요.<br>보통·어려움은 왼발·오른발·양발·연타 노트를 즐겨보세요.<br>
+                양발 노트는 두 입력을 함께 치고, 번개 노트는 표시 횟수만큼 빠르게 연타합니다.
+            </p>
+            <div class="pranam-guide">
+                <strong>🙏 프라남(Pranam)이란?</strong><br>
+                프라남은 인도에서 두 손을 모으거나 몸을 숙여 상대에게 존경을 표현하는 인사입니다.
+                특히 어른의 발을 만지는 행위는 부모님과 스승께 감사드리고 축복을 구하는 전통적인 존중의 표현입니다.
+                이 게임은 그 마음을 발마사지 리듬으로 체험하도록 구성했습니다.
+            </div>
+            <input type="text" id="player-name" placeholder="미입력 시 영주한국효문화진흥원" maxlength="20">
+            <div id="name-warning">이름을 입력하지 않으면 영주한국효문화진흥원으로 진행합니다.</div>
+            <div id="hardware-panel">
+                북 연결: 게임패드/WebHID/키보드 지원
+                <button id="hardware-connect-btn" type="button">북 연결</button>
+                <span id="hardware-status">왼쪽 북=왼발 · 오른쪽 북=오른발 · 함께 치기=양발</span>
+            </div>
+            <div id="length-select">
+                <button class="length-btn active" id="btn-length-part" data-mode="full">74초 게임</button>
+                <button class="length-btn" id="btn-length-full" data-mode="full" style="display:none">74초 게임</button>
+            </div>
+            <button class="diff-btn" id="btn-easy">쉬움</button>
+            <button class="diff-btn" id="btn-normal">보통</button>
+            <button class="diff-btn" id="btn-hard">어려움</button>
+        </div>
+
+        <div id="loading-overlay">
+            <div class="spinner"></div>
+            <div>음원 불러오는 중...</div>
+        </div>
+
+        <div id="end-overlay"><div id="ending-story">
+ <img src="massage-happy-ending.png" alt="마사지 후 반짝이는 깨끗한 두 발과 환하게 웃는 할아버지">
+ <h3>반짝반짝 깨끗한 발, 활짝 웃는 할아버지!</h3>
+ <p>정성껏 마사지하니 두 발이 깨끗해졌어요.<br>“고마워요! 발도 마음도 한결 가벼워졌어요.”</p>
+</div>
+            <div id="arcade-screen">
+                <div id="arcade-title">마사지 완료!</div>
+                <div id="arcade-newrecord">★ NEW RECORD ★</div>
+                <div id="arcade-player">PLAYER <span id="result-player-name">-----</span></div>
+
+                <div id="arcade-score-huge">
+                    <div class="score-label">SCORE</div>
+                    <div id="res-score">000000</div>
+                </div>
+
+                <div id="arcade-stats">
+                    <div class="arcade-stat-row"><span>MAX COMBO</span><span id="res-max-combo">0</span></div>
+                    <div class="arcade-stat-row"><span>HIT</span><span id="res-hits">0</span></div>
+                    <div class="arcade-stat-row"><span>MISS</span><span id="res-miss">0</span></div>
+                </div>
+
+                <div id="arcade-rank-title">- 이름·점수 TOP 10 -</div>
+                <div id="arcade-rank-list">
+                    <div class="arcade-rank-loading">LOADING...</div>
+                </div>
+
+                <button id="restart-btn">PRESS TO CONTINUE ▶</button>
+                <div id="auto-return-note">5초 후 자동으로 처음 화면으로 돌아갑니다</div>
+            </div>
+        </div>
+
+        <div id="header">
+            <h2>🥁 알 이즈 웰! 리듬 게임</h2>
+            <div id="selected-song" style="text-align:center;color:#ffd166;font-weight:800;font-size:.86rem;margin:2px 0 6px;">곡을 선택할 난이도를 골라주세요</div>
+            <div id="score-board">
+                <span id="score-val">점수: 0</span>
+                <span id="current-diff">선택 대기중</span>
+                <span id="combo-val">콤보: 0</span>
+            </div>
+            <div id="song-progress-wrap"><div id="song-progress-bar"></div></div>
+            <div id="song-time">0:00 / 0:00</div>
+        </div>
+
+        <div id="taiko-lane">
+            <div id="target-zone"></div>
+        </div>
+
+        <div id="judge-text">입력 대기중</div>
+
+        <div id="massage-stage" role="img" aria-label="마사지에 반응하는 할아버지">
+ <img class="massage-frame" src="massage-idle.png" alt="마사지 전 할아버지의 두 발" draggable="false">
+ <img class="massage-frame" id="massage-reaction" src="massage-reaction.png" alt="" draggable="false">
+ <div id="massage-caption">리듬에 맞춰 마사지해 주세요!</div>
+</div>
+        <div id="drum-container">
+            <div class="taiko-drum" id="drum-left">
+                👣
+                <div class="drum-label">왼발 (Z / A / F / ←)</div>
+            </div>
+            <div class="taiko-drum" id="drum-both">
+                👣👣
+                <div class="drum-label">양발 동시 (G / Space)</div>
+            </div>
+            <div class="taiko-drum" id="drum-right">
+                👣
+                <div class="drum-label">오른발 (D / J / →)</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<audio id="song-audio" preload="none"></audio>
+
+<script>
+(function() {
+    const NOTE_MAPS = {"easy":[{"t":1.533,"lane":"left"},{"t":2.467,"lane":"left"},{"t":3.28,"lane":"right"},{"t":3.901,"lane":"left"},{"t":4.406,"lane":"right"},{"t":5.039,"lane":"left"},{"t":5.538,"lane":"right"},{"t":6.473,"lane":"right"},{"t":7.285,"lane":"left"},{"t":7.906,"lane":"left"},{"t":8.661,"lane":"right"},{"t":9.154,"lane":"left"},{"t":9.741,"lane":"right"},{"t":10.712,"lane":"left"},{"t":11.72,"lane":"right"},{"t":12.992,"lane":"right"},{"t":13.862,"lane":"left"},{"t":14.69,"lane":"left"},{"t":15.279,"lane":"right"},{"t":15.784,"lane":"left"},{"t":16.289,"lane":"right"},{"t":16.788,"lane":"left"},{"t":17.287,"lane":"right"},{"t":17.914,"lane":"right"},{"t":18.541,"lane":"left"},{"t":19.199,"lane":"left"},{"t":20.445,"lane":"right"},{"t":21.703,"lane":"left"},{"t":22.369,"lane":"right"},{"t":23.201,"lane":"left"},{"t":23.696,"lane":"right"},{"t":24.191,"lane":"right"},{"t":24.532,"lane":"left"},{"t":25.008,"lane":"left"},{"t":25.542,"lane":"right"},{"t":26.03,"lane":"left"},{"t":26.529,"lane":"right"},{"t":27.028,"lane":"left"},{"t":27.527,"lane":"right"},{"t":28.108,"lane":"right"},{"t":28.696,"lane":"left"},{"t":29.203,"lane":"left"},{"t":29.722,"lane":"right"},{"t":30.412,"lane":"left"},{"t":30.867,"lane":"right"},{"t":31.359,"lane":"left"},{"t":31.881,"lane":"right"},{"t":32.361,"lane":"right"},{"t":32.864,"lane":"left"},{"t":33.371,"lane":"left"},{"t":34.122,"lane":"right"},{"t":34.706,"lane":"left"},{"t":35.039,"lane":"right"},{"t":35.527,"lane":"left"},{"t":36.026,"lane":"right"},{"t":37.036,"lane":"right"},{"t":37.535,"lane":"left"},{"t":38.255,"lane":"left"},{"t":38.766,"lane":"right"},{"t":39.155,"lane":"left"},{"t":39.66,"lane":"right"},{"t":40.13,"lane":"left"},{"t":40.689,"lane":"right"},{"t":41.198,"lane":"right"},{"t":41.912,"lane":"left"},{"t":42.527,"lane":"left"},{"t":43.038,"lane":"right"},{"t":43.526,"lane":"left"},{"t":44.037,"lane":"right"},{"t":44.716,"lane":"left"},{"t":45.325,"lane":"right"},{"t":46.111,"lane":"right"},{"t":46.691,"lane":"left"},{"t":47.032,"lane":"left"},{"t":47.531,"lane":"right"},{"t":48.03,"lane":"left"},{"t":48.518,"lane":"right"},{"t":49.029,"lane":"left"},{"t":49.54,"lane":"right"},{"t":50.225,"lane":"right"},{"t":50.705,"lane":"left"},{"t":51.154,"lane":"left"},{"t":51.618,"lane":"right"},{"t":52.164,"lane":"left"},{"t":52.651,"lane":"right"},{"t":53.15,"lane":"left"},{"t":53.656,"lane":"right"},{"t":54.079,"lane":"right"},{"t":54.532,"lane":"left"},{"t":55.031,"lane":"left"},{"t":55.531,"lane":"right"},{"t":56.119,"lane":"left"},{"t":56.651,"lane":"right"},{"t":57.156,"lane":"left"},{"t":57.539,"lane":"right"},{"t":58.12,"lane":"right"},{"t":58.659,"lane":"left"},{"t":59.176,"lane":"left"}],"normal":[{"t":1.533,"lane":"left"},{"t":1.904,"lane":"left"},{"t":2.467,"lane":"right"},{"t":3.03,"lane":"left"},{"t":3.28,"lane":"right"},{"t":3.529,"lane":"left"},{"t":3.901,"lane":"right"},{"t":4.284,"lane":"right"},{"t":4.528,"lane":"left"},{"t":4.905,"lane":"left"},{"t":5.205,"lane":"right"},{"t":5.372,"lane":"left"},{"t":5.909,"lane":"right"},{"t":6.473,"lane":"left"},{"t":7.036,"lane":"right"},{"t":7.285,"lane":"right"},{"t":7.535,"lane":"left"},{"t":7.906,"lane":"left"},{"t":8.29,"lane":"right"},{"t":8.661,"lane":"left"},{"t":9.033,"lane":"right"},{"t":9.276,"lane":"left"},{"t":9.567,"lane":"right"},{"t":9.915,"lane":"right"},{"t":10.298,"lane":"left"},{"t":10.919,"lane":"left"},{"t":11.54,"lane":"right"},{"t":11.9,"lane":"left"},{"t":12.719,"lane":"right"},{"t":13.537,"lane":"left"},{"t":13.781,"lane":"right"},{"t":14.025,"lane":"right"},{"t":14.524,"lane":"left"},{"t":15.023,"lane":"left"},{"t":15.279,"lane":"right"},{"t":15.701,"lane":"left"},{"t":15.867,"lane":"right"},{"t":16.204,"lane":"left"},{"t":16.374,"lane":"right"},{"t":16.707,"lane":"right"},{"t":16.869,"lane":"left"},{"t":17.202,"lane":"left"},{"t":17.372,"lane":"right"},{"t":17.728,"lane":"left"},{"t":18.123,"lane":"right"},{"t":18.332,"lane":"left"},{"t":18.87,"lane":"right"},{"t":19.199,"lane":"right"},{"t":19.714,"lane":"left"},{"t":20.445,"lane":"left"},{"t":20.991,"lane":"right"},{"t":21.703,"lane":"left"},{"t":21.869,"lane":"right"},{"t":22.369,"lane":"left"},{"t":22.701,"lane":"right"},{"t":23.201,"lane":"right"},{"t":23.367,"lane":"left"},{"t":23.696,"lane":"left"},{"t":24.021,"lane":"right"},{"t":24.276,"lane":"left"},{"t":24.532,"lane":"right"},{"t":24.77,"lane":"left"},{"t":25.008,"lane":"right"},{"t":25.275,"lane":"right"},{"t":25.542,"lane":"left"},{"t":25.786,"lane":"left"},{"t":26.03,"lane":"right"},{"t":26.273,"lane":"left"},{"t":26.529,"lane":"right"},{"t":26.778,"lane":"left"},{"t":27.028,"lane":"right"},{"t":27.278,"lane":"right"},{"t":27.527,"lane":"left"},{"t":27.899,"lane":"left"},{"t":28.212,"lane":"right"},{"t":28.526,"lane":"left"},{"t":28.781,"lane":"right"},{"t":29.037,"lane":"left"},{"t":29.286,"lane":"right"},{"t":29.536,"lane":"right"},{"t":29.907,"lane":"left"},{"t":30.412,"lane":"left"},{"t":30.701,"lane":"right"},{"t":30.867,"lane":"left"},{"t":31.196,"lane":"right"},{"t":31.359,"lane":"left"},{"t":31.701,"lane":"right"},{"t":32.02,"lane":"right"},{"t":32.276,"lane":"left"},{"t":32.531,"lane":"left"},{"t":32.781,"lane":"right"},{"t":33.03,"lane":"left"},{"t":33.286,"lane":"right"},{"t":33.541,"lane":"left"},{"t":33.913,"lane":"right"},{"t":34.226,"lane":"right"},{"t":34.54,"lane":"left"},{"t":34.789,"lane":"left"},{"t":35.039,"lane":"right"},{"t":35.283,"lane":"left"},{"t":35.527,"lane":"right"},{"t":35.776,"lane":"left"},{"t":36.026,"lane":"right"},{"t":36.699,"lane":"right"},{"t":37.202,"lane":"left"},{"t":37.369,"lane":"left"},{"t":37.721,"lane":"right"},{"t":38.081,"lane":"left"},{"t":38.383,"lane":"right"},{"t":38.638,"lane":"left"},{"t":38.899,"lane":"right"},{"t":39.155,"lane":"right"},{"t":39.404,"lane":"left"},{"t":39.66,"lane":"left"},{"t":39.909,"lane":"right"},{"t":40.13,"lane":"left"},{"t":40.374,"lane":"right"},{"t":40.689,"lane":"left"},{"t":40.859,"lane":"right"},{"t":41.198,"lane":"right"},{"t":41.529,"lane":"left"},{"t":41.912,"lane":"left"},{"t":42.272,"lane":"right"},{"t":42.527,"lane":"left"},{"t":42.876,"lane":"right"},{"t":43.148,"lane":"left"},{"t":43.526,"lane":"right"},{"t":43.781,"lane":"right"},{"t":44.037,"lane":"left"},{"t":44.368,"lane":"left"},{"t":44.716,"lane":"right"},{"t":45.116,"lane":"left"},{"t":45.325,"lane":"right"},{"t":45.72,"lane":"left"},{"t":46.111,"lane":"right"},{"t":46.316,"lane":"right"},{"t":46.691,"lane":"left"},{"t":46.862,"lane":"left"},{"t":47.137,"lane":"right"},{"t":47.386,"lane":"left"},{"t":47.698,"lane":"right"},{"t":47.864,"lane":"left"},{"t":48.193,"lane":"right"},{"t":48.356,"lane":"right"},{"t":48.688,"lane":"left"},{"t":48.859,"lane":"left"},{"t":49.199,"lane":"right"},{"t":49.369,"lane":"left"},{"t":49.726,"lane":"right"},{"t":50.225,"lane":"left"},{"t":50.538,"lane":"right"},{"t":50.788,"lane":"right"},{"t":51.037,"lane":"left"},{"t":51.27,"lane":"left"},{"t":51.525,"lane":"right"},{"t":51.711,"lane":"left"},{"t":52.036,"lane":"right"},{"t":52.291,"lane":"left"},{"t":52.524,"lane":"right"},{"t":52.779,"lane":"right"},{"t":53.023,"lane":"left"},{"t":53.278,"lane":"left"},{"t":53.534,"lane":"right"},{"t":53.777,"lane":"left"},{"t":54.079,"lane":"right"},{"t":54.306,"lane":"left"},{"t":54.532,"lane":"right"},{"t":54.776,"lane":"right"},{"t":55.031,"lane":"left"},{"t":55.275,"lane":"left"},{"t":55.531,"lane":"right"},{"t":55.774,"lane":"left"},{"t":56.221,"lane":"right"},{"t":56.529,"lane":"left"},{"t":56.773,"lane":"right"},{"t":57.028,"lane":"right"},{"t":57.284,"lane":"left"},{"t":57.539,"lane":"left"},{"t":57.771,"lane":"right"},{"t":58.12,"lane":"left"},{"t":58.329,"lane":"right"},{"t":58.659,"lane":"left"},{"t":58.909,"lane":"right"},{"t":59.176,"lane":"right"}],"hard":[{"t":1.533,"lane":"left"},{"t":1.904,"lane":"left"},{"t":2.279,"lane":"right"},{"t":2.655,"lane":"left"},{"t":3.03,"lane":"right"},{"t":3.28,"lane":"left"},{"t":3.363,"lane":"right"},{"t":3.715,"lane":"right"},{"t":3.901,"lane":"left"},{"t":4.284,"lane":"left"},{"t":4.406,"lane":"right"},{"t":4.772,"lane":"left"},{"t":4.905,"lane":"right"},{"t":5.205,"lane":"left"},{"t":5.288,"lane":"right"},{"t":5.538,"lane":"right"},{"t":5.909,"lane":"left"},{"t":6.285,"lane":"left"},{"t":6.66,"lane":"right"},{"t":7.036,"lane":"left"},{"t":7.285,"lane":"right"},{"t":7.368,"lane":"left"},{"t":7.721,"lane":"right"},{"t":7.906,"lane":"right"},{"t":8.29,"lane":"left"},{"t":8.475,"lane":"left"},{"t":8.847,"lane":"right"},{"t":9.033,"lane":"left"},{"t":9.276,"lane":"right"},{"t":9.421,"lane":"left"},{"t":9.741,"lane":"right"},{"t":10.106,"lane":"right"},{"t":10.298,"lane":"left"},{"t":10.919,"lane":"left"},{"t":11.126,"lane":"right"},{"t":11.72,"lane":"left"},{"t":11.9,"lane":"right"},{"t":12.719,"lane":"left"},{"t":12.992,"lane":"right"},{"t":13.7,"lane":"right"},{"t":13.781,"lane":"left"},{"t":14.025,"lane":"left"},{"t":14.358,"lane":"right"},{"t":14.69,"lane":"left"},{"t":15.023,"lane":"right"},{"t":15.279,"lane":"left"},{"t":15.534,"lane":"right"},{"t":15.701,"lane":"right"},{"t":15.867,"lane":"left"},{"t":16.033,"lane":"left"},{"t":16.289,"lane":"right"},{"t":16.374,"lane":"left"},{"t":16.707,"lane":"right"},{"t":16.788,"lane":"left"},{"t":17.032,"lane":"right"},{"t":17.202,"lane":"right"},{"t":17.372,"lane":"left"},{"t":17.543,"lane":"left"},{"t":17.914,"lane":"right"},{"t":18.123,"lane":"left"},{"t":18.332,"lane":"right"},{"t":18.87,"lane":"left"},{"t":19.035,"lane":"right"},{"t":19.528,"lane":"right"},{"t":19.714,"lane":"left"},{"t":20.445,"lane":"left"},{"t":20.718,"lane":"right"},{"t":21.537,"lane":"left"},{"t":21.703,"lane":"right"},{"t":21.869,"lane":"left"},{"t":22.036,"lane":"right"},{"t":22.535,"lane":"right"},{"t":22.701,"lane":"left"},{"t":23.201,"lane":"left"},{"t":23.284,"lane":"right"},{"t":23.533,"lane":"left"},{"t":23.696,"lane":"right"},{"t":23.859,"lane":"left"},{"t":24.191,"lane":"right"},{"t":24.276,"lane":"right"},{"t":24.532,"lane":"left"},{"t":24.691,"lane":"left"},{"t":24.849,"lane":"right"},{"t":25.008,"lane":"left"},{"t":25.275,"lane":"right"},{"t":25.364,"lane":"left"},{"t":25.704,"lane":"right"},{"t":25.786,"lane":"right"},{"t":26.03,"lane":"left"},{"t":26.151,"lane":"left"},{"t":26.401,"lane":"right"},{"t":26.529,"lane":"left"},{"t":26.778,"lane":"right"},{"t":27.028,"lane":"left"},{"t":27.194,"lane":"right"},{"t":27.361,"lane":"right"},{"t":27.527,"lane":"left"},{"t":27.899,"lane":"left"},{"t":28.108,"lane":"right"},{"t":28.317,"lane":"left"},{"t":28.526,"lane":"right"},{"t":28.781,"lane":"left"},{"t":28.866,"lane":"right"},{"t":29.203,"lane":"right"},{"t":29.286,"lane":"left"},{"t":29.536,"lane":"left"},{"t":29.722,"lane":"right"},{"t":30.099,"lane":"left"},{"t":30.412,"lane":"right"},{"t":30.534,"lane":"left"},{"t":30.784,"lane":"right"},{"t":30.867,"lane":"right"},{"t":31.196,"lane":"left"},{"t":31.277,"lane":"left"},{"t":31.521,"lane":"right"},{"t":31.701,"lane":"left"},{"t":32.02,"lane":"right"},{"t":32.191,"lane":"left"},{"t":32.361,"lane":"right"},{"t":32.531,"lane":"right"},{"t":32.781,"lane":"left"},{"t":32.864,"lane":"left"},{"t":33.201,"lane":"right"},{"t":33.371,"lane":"left"},{"t":33.541,"lane":"right"},{"t":33.913,"lane":"left"},{"t":34.122,"lane":"right"},{"t":34.331,"lane":"right"},{"t":34.54,"lane":"left"},{"t":34.789,"lane":"left"},{"t":34.873,"lane":"right"},{"t":35.201,"lane":"left"},{"t":35.283,"lane":"right"},{"t":35.527,"lane":"left"},{"t":35.693,"lane":"right"},{"t":35.859,"lane":"right"},{"t":36.026,"lane":"left"},{"t":36.531,"lane":"left"},{"t":37.036,"lane":"right"},{"t":37.202,"lane":"left"},{"t":37.369,"lane":"right"},{"t":37.535,"lane":"left"},{"t":37.907,"lane":"right"},{"t":38.081,"lane":"right"},{"t":38.383,"lane":"left"},{"t":38.51,"lane":"left"},{"t":38.766,"lane":"right"},{"t":38.899,"lane":"left"},{"t":39.155,"lane":"right"},{"t":39.277,"lane":"left"},{"t":39.532,"lane":"right"},{"t":39.66,"lane":"right"},{"t":39.909,"lane":"left"},{"t":40.13,"lane":"left"},{"t":40.229,"lane":"right"},{"t":40.519,"lane":"left"},{"t":40.689,"lane":"right"},{"t":40.859,"lane":"left"},{"t":41.03,"lane":"right"},{"t":41.366,"lane":"right"},{"t":41.529,"lane":"left"},{"t":41.912,"lane":"left"},{"t":42.092,"lane":"right"},{"t":42.4,"lane":"left"},{"t":42.527,"lane":"right"},{"t":42.876,"lane":"left"},{"t":43.038,"lane":"right"},{"t":43.259,"lane":"right"},{"t":43.526,"lane":"left"},{"t":43.696,"lane":"left"},{"t":43.866,"lane":"right"},{"t":44.037,"lane":"left"},{"t":44.368,"lane":"right"},{"t":44.524,"lane":"left"},{"t":44.907,"lane":"right"},{"t":45.116,"lane":"right"},{"t":45.325,"lane":"left"},{"t":45.534,"lane":"left"},{"t":45.906,"lane":"right"},{"t":46.111,"lane":"left"},{"t":46.316,"lane":"right"},{"t":46.521,"lane":"left"},{"t":46.777,"lane":"right"},{"t":46.862,"lane":"right"},{"t":47.137,"lane":"left"},{"t":47.386,"lane":"left"},{"t":47.531,"lane":"right"},{"t":47.781,"lane":"left"},{"t":47.864,"lane":"right"},{"t":48.193,"lane":"left"},{"t":48.274,"lane":"right"},{"t":48.518,"lane":"right"},{"t":48.688,"lane":"left"},{"t":48.859,"lane":"left"},{"t":49.029,"lane":"right"},{"t":49.284,"lane":"left"},{"t":49.369,"lane":"right"},{"t":49.726,"lane":"left"},{"t":49.911,"lane":"right"},{"t":50.225,"lane":"right"},{"t":50.538,"lane":"left"},{"t":50.705,"lane":"left"},{"t":50.871,"lane":"right"},{"t":51.037,"lane":"left"},{"t":51.27,"lane":"right"},{"t":51.397,"lane":"left"},{"t":51.618,"lane":"right"},{"t":51.711,"lane":"right"},{"t":52.036,"lane":"left"},{"t":52.164,"lane":"left"},{"t":52.407,"lane":"right"},{"t":52.524,"lane":"left"},{"t":52.779,"lane":"right"},{"t":52.901,"lane":"left"},{"t":53.15,"lane":"right"},{"t":53.406,"lane":"right"},{"t":53.534,"lane":"left"},{"t":53.777,"lane":"left"},{"t":53.917,"lane":"right"},{"t":54.23,"lane":"left"},{"t":54.306,"lane":"right"},{"t":54.532,"lane":"left"},{"t":54.654,"lane":"right"},{"t":54.904,"lane":"right"},{"t":55.031,"lane":"left"},{"t":55.275,"lane":"left"},{"t":55.403,"lane":"right"},{"t":55.652,"lane":"left"},{"t":55.774,"lane":"right"},{"t":56.119,"lane":"left"},{"t":56.324,"lane":"right"},{"t":56.529,"lane":"right"},{"t":56.773,"lane":"left"},{"t":56.9,"lane":"left"},{"t":57.156,"lane":"right"},{"t":57.284,"lane":"left"},{"t":57.539,"lane":"right"},{"t":57.655,"lane":"left"},{"t":57.911,"lane":"right"},{"t":58.12,"lane":"right"},{"t":58.329,"lane":"left"},{"t":58.538,"lane":"left"},{"t":58.781,"lane":"right"},{"t":58.909,"lane":"left"},{"t":59.176,"lane":"right"}]};
+    const SONG_DURATION = 74;
+    const PART_CUTOFF = 74;
+
+    const root = document.getElementById('taiko-game-root');
+    const scoreVal = root.querySelector('#score-val');
+    const comboVal = root.querySelector('#combo-val');
+    const currentDiff = root.querySelector('#current-diff');
+    const selectedSong = root.querySelector('#selected-song');
+    const judgeText = root.querySelector('#judge-text');
+    const startOverlay = root.querySelector('#start-overlay');
+    const endOverlay = root.querySelector('#end-overlay');
+    const loadingOverlay = root.querySelector('#loading-overlay');
+    const taikoLane = root.querySelector('#taiko-lane');
+    const drumLeft = root.querySelector('#drum-left');
+    const drumRight = root.querySelector('#drum-right');
+    const drumBoth = root.querySelector('#drum-both');
+    const progressBar = root.querySelector('#song-progress-bar');
+    const songTimeEl = root.querySelector('#song-time');
+    const resScore = root.querySelector('#res-score');
+    const resMaxCombo = root.querySelector('#res-max-combo');
+    const resHits = root.querySelector('#res-hits');
+    const resMiss = root.querySelector('#res-miss');
+    const arcadeNewRecord = root.querySelector('#arcade-newrecord');
+    const arcadeRankList = root.querySelector('#arcade-rank-list');
+    const playerNameInput = root.querySelector('#player-name');
+    const nameWarning = root.querySelector('#name-warning');
+    const hardwareConnectBtn = root.querySelector('#hardware-connect-btn');
+    const hardwareStatus = root.querySelector('#hardware-status');
+    const resultPlayerName = root.querySelector('#result-player-name');
+    const autoReturnNote = root.querySelector('#auto-return-note');
+    const restartBtn = root.querySelector('#restart-btn');
+    const dancers = Array.from(root.querySelectorAll('.india-dancer'));
+    const audio = document.getElementById('song-audio');
+    const musicTracks = Array.from({ length: 5 }, (_, index) => ({
+        title: '인도노래' + (index + 1),
+        src: 'INDIA MUSIC/인도노래' + (index + 1) + '.mp3'
+    }));
+    let selectedMusicTrack = null;
+    let musicLoading = false;
+    const diffButtons = [root.querySelector('#btn-easy'), root.querySelector('#btn-normal'), root.querySelector('#btn-hard')];
+    const lengthButtons = [root.querySelector('#btn-length-part'), root.querySelector('#btn-length-full')];
+
+    let score = 0;
+    let combo = 0;
+    let maxCombo = 0;
+    let hitCount = 0;
+    let missCount = 0;
+    let notes = [];
+    let gameActive = false;
+    let songEnded = false;
+    let musicContext = null;
+    let indianMusicTimer = null;
+    let indianBeatIndex = 0;
+    const indianTracks = {
+        easy: { title: '알 이즈 웰 · 74초 · 쉬움', bpm: 92, mode: 'original' },
+        normal: { title: '알 이즈 웰 · 74초 · 보통', bpm: 92, mode: 'original' },
+        hard: { title: '알 이즈 웰 · 74초 · 어려움', bpm: 92, mode: 'original' }
+    };
+
+
+    const massageStage = root.querySelector('#massage-stage');
+    const massageCaption = root.querySelector('#massage-caption');
+    let massageTimer = null;
+    let massageMotion = null;
+    function reactToMassage(lane) {
+        if (!gameActive) return;
+        clearTimeout(massageTimer);
+        massageStage.classList.add('reacting');
+        massageCaption.innerText = lane === 'both' ? '양발 꾹꾹! 아이고, 시원하다!' : lane === 'left' ? '왼발 꾹! 아이고, 간지러워!' : '오른발 꾹! 아이고, 시원하다!';
+        if (massageMotion) massageMotion.cancel();
+        if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            const tilt = lane === 'left' ? -0.8 : lane === 'right' ? 0.8 : 0;
+            massageMotion = massageStage.animate([
+                {transform:'translateY(0) rotate(0deg)'},
+                {transform:'translateY(-5px) rotate('+tilt+'deg)',offset:.25},
+                {transform:'translateY(2px) rotate('+(-tilt*.5)+'deg)',offset:.55},
+                {transform:'translateY(0) rotate(0deg)'}
+            ],{duration:300,easing:'ease-out'});
+        }
+        massageTimer = setTimeout(() => {
+            massageStage.classList.remove('reacting');
+            massageCaption.innerText = '리듬에 맞춰 마사지해 주세요!';
+        },230);
+    }
+    function resetMassageScene() {
+        clearTimeout(massageTimer);
+        if (massageMotion) massageMotion.cancel();
+        massageStage.classList.remove('reacting');
+        massageCaption.innerText = '리듬에 맞춰 마사지해 주세요!';
+    }
+
+    function stopIndianTrack() {
+        if (indianMusicTimer) clearInterval(indianMusicTimer);
+        indianMusicTimer = null; indianBeatIndex = 0;
+        if (musicContext) musicContext.suspend().catch(() => {});
+    }
+    function synthTone(freq, duration, type, volume, delay = 0) {
+        if (!musicContext) return;
+        const now = musicContext.currentTime + delay;
+        const osc = musicContext.createOscillator(), gain = musicContext.createGain();
+        osc.type = type; osc.frequency.setValueAtTime(freq, now);
+        osc.frequency.exponentialRampToValueAtTime(Math.max(60, freq * .985), now + duration);
+        gain.gain.setValueAtTime(.0001, now); gain.gain.exponentialRampToValueAtTime(volume, now + .015);
+        gain.gain.exponentialRampToValueAtTime(.0001, now + duration);
+        osc.connect(gain).connect(musicContext.destination); osc.start(now); osc.stop(now + duration + .03);
+    }
+    function playIndianBeat(track) {
+        const i = indianBeatIndex++, note = track.scale[i % track.scale.length];
+        if (track.mode === 'raga') {
+            synthTone(note, .42, 'triangle', .09); synthTone(note * 2, .22, 'sawtooth', .025, .035);
+            if (i % 4 === 0) synthTone(82.41, .28, 'sine', .13);
+        } else {
+            synthTone(i % 2 ? 130.81 : 98, .12, 'square', .11); synthTone(note, .16, 'sawtooth', .055, .04);
+            if (i % 4 === 0 || i % 4 === 3) synthTone(61.74, .2, 'sine', .18);
+        }
+    }
+    function startIndianTrack(difficulty) {
+        stopIndianTrack();
+        const track = indianTracks[difficulty];
+        selectedSong.innerText = '🎵 ' + selectedMusicTrack.title + ' · 74초 · ' + ({ easy:'쉬움', normal:'보통', hard:'어려움' })[difficulty];
+        audio.volume = track.mode === 'original' ? 1 : 0;
+        audio.playbackRate = 1;
+        if (track.mode === 'original') return;
+        musicContext = musicContext || new (window.AudioContext || window.webkitAudioContext)();
+        musicContext.resume(); playIndianBeat(track);
+        indianMusicTimer = setInterval(() => playIndianBeat(track), 60000 / track.bpm / 2);
+    }
+
+    function updateDancers() {
+        const count = Math.min(10, Math.max(1, Math.ceil(maxCombo / 10)));
+        dancers.forEach((d, i) => d.classList.toggle('show', i < count));
+    }
+    updateDancers();
+    let autoReturnTimer = null;
+    let playerName = '';
+    let songLengthMode = 'full';
+    let effectiveDuration = PART_CUTOFF;
+    const LB_PREFIX = 'aalizzwell_score:';
+
+    let childMode = false;
+    let noteSpeed = 5.0;
+    let noteMap = [];
+    let noteIndex = 0;
+    let leadTime = 1.2; // seconds of travel time from spawn to target
+
+    const targetX = 50 + 65;
+    const hitRange = 82;
+
+    const difficultyConfig = {
+        easy:   { noteSpeed: 2.2, mapKey: 'easy' },
+        normal: { noteSpeed: 4.7, mapKey: 'easy' },
+        hard:   { noteSpeed: 9.5, mapKey: 'hard' }
+    };
+
+    function formatTime(sec) {
+        if (!isFinite(sec)) return '0:00';
+        const m = Math.floor(sec / 60);
+        const s = Math.floor(sec % 60);
+        return m + ':' + (s < 10 ? '0' : '') + s;
+    }
+
+    function spawnNote(spec) {
+        const lane = spec.lane, hitTime = spec.t;
+        const noteEl = document.createElement('div');
+        const laneClass = lane === 'left' ? 'left-lane' : lane === 'right' ? 'right-lane' : lane === 'both' ? 'both-lane' : 'roll-lane';
+        noteEl.classList.add('note', laneClass);
+        noteEl.innerHTML = lane === 'roll' ? `연타 0/${spec.hitsNeeded || 12}` : '';
+
+        const startX = taikoLane.clientWidth || 500;
+        noteEl.style.left = startX + 'px';
+        taikoLane.appendChild(noteEl);
+
+        notes.push({ element: noteEl, lane, x:startX, hitTime, hitsNeeded:spec.hitsNeeded || 12, hitsDone:0, duration:spec.duration || 3.2 });
+    }
+
+    function computeLeadTime() {
+        const laneWidth = taikoLane.clientWidth || 500;
+        const framesToTravel = (laneWidth - targetX) / noteSpeed;
+        // assume ~60fps for lead-time estimate (matches per-frame movement model)
+        leadTime = framesToTravel / 60;
+    }
+
+    function gameLoop() {
+        if (!gameActive) return;
+
+        const t = audio.currentTime;
+
+        while (noteIndex < noteMap.length && t >= (noteMap[noteIndex].t - leadTime)) {
+            spawnNote(noteMap[noteIndex]);
+            noteIndex++;
+        }
+
+        for (let i = notes.length - 1; i >= 0; i--) {
+            let note = notes[i];
+            note.x = (childMode && t >= note.hitTime) || (note.lane === 'roll' && t >= note.hitTime)
+                ? targetX - 65
+                : targetX - 65 + (note.hitTime - t) * noteSpeed * 60;
+            note.element.style.left = note.x + 'px';
+
+            const missAfter = note.lane === 'roll' ? note.hitTime + note.duration : note.hitTime + (childMode ? 1.1 : 0.38);
+            if (t > missAfter) {
+                note.element.remove();
+                notes.splice(i, 1);
+                if (childMode) { judgeText.innerText = '괜찮아요! 다음 북을 쳐 볼까요?'; judgeText.style.color = '#fff1ae'; }
+                else triggerScore('MISS', '#ff4d4d', false);
+            }
+        }
+
+        if (songEnded && notes.length === 0) {
+            finishSong();
+            return;
+        }
+
+        requestAnimationFrame(gameLoop);
+    }
+
+    function triggerScore(type, color, isHit) {
+        judgeText.innerText = type;
+        judgeText.style.color = color;
+        if (isHit) {
+            combo++;
+            if (combo > maxCombo) maxCombo = combo;
+            updateDancers();
+            hitCount++;
+            score += 100 + (combo * 5);
+        } else {
+            combo = 0;
+            missCount++;
+        }
+        scoreVal.innerText = `점수: ${score}`;
+        comboVal.innerText = `콤보: ${combo}`;
+    }
+
+    function noteDistance(note) {
+        return Math.abs(note.x + 65 - targetX);
+    }
+
+
+    function judgeChildNote() {
+        if (!gameActive) return;
+        let nearest = -1;
+        let delta = Infinity;
+        for (let i=0;i<notes.length;i++) {
+            const d = Math.abs(notes[i].hitTime-audio.currentTime);
+            if (d <= 1.1 && d < delta) { nearest=i; delta=d; }
+        }
+        if (nearest !== -1) {
+            triggerScore('참 잘했어요! 짝짝짝!', '#ffd700', true);
+            notes[nearest].element.remove(); notes.splice(nearest,1);
+        } else {
+            judgeText.innerText = '천천히, 동그라미가 오면 북을 쳐요!';
+            judgeText.style.color = '#fff1ae';
+        }
+    }
+
+    function judgeLane(lane) {
+        if (!gameActive) return;
+        if (judgeRoll()) return;
+        let targetIdx = -1;
+        for (let i = 0; i < notes.length; i++) {
+            if (notes[i].lane === lane) { targetIdx = i; break; }
+        }
+
+        if (targetIdx !== -1) {
+            const note = notes[targetIdx];
+            const distance = noteDistance(note);
+            if (distance < hitRange) {
+                triggerScore('알 이즈 웰! PERFECT', '#ffd700', true);
+                note.element.remove(); notes.splice(targetIdx, 1);
+            } else if (distance < hitRange * 1.5) {
+                triggerScore('좋아! GOOD', '#4dff4d', true);
+                note.element.remove(); notes.splice(targetIdx, 1);
+            } else {
+                triggerScore('MISS', '#ff4d4d', false);
+            }
+        } else {
+            triggerScore('허공 연타! MISS', '#ff5722', false);
+        }
+    }
+
+    function judgeRoll() {
+        let targetIdx = -1;
+        for (let i = 0; i < notes.length; i++) {
+            if (notes[i].lane !== 'roll') continue;
+            const distance = noteDistance(notes[i]);
+            if (distance < hitRange * 2.1) { targetIdx = i; break; }
+        }
+        if (targetIdx === -1) return false;
+        const note = notes[targetIdx];
+        note.hitsDone++;
+        combo++; hitCount++; score += 45 + combo * 2;
+        if (combo > maxCombo) maxCombo = combo;
+        updateDancers();
+        scoreVal.innerText = `점수: ${score}`;
+        comboVal.innerText = `콤보: ${combo}`;
+        note.element.innerHTML = `연타 ${note.hitsDone}/${note.hitsNeeded}`;
+        judgeText.innerText = `연타! ${note.hitsDone}/${note.hitsNeeded}`;
+        judgeText.style.color = '#f0abfc';
+        if (note.hitsDone >= note.hitsNeeded) {
+            score += 250;
+            judgeText.innerText = '연타 성공! FEVER';
+            judgeText.style.color = '#ffd700';
+            note.element.remove(); notes.splice(targetIdx, 1);
+            scoreVal.innerText = `점수: ${score}`;
+        }
+        return true;
+    }
+
+    function judgeBoth() {
+        if (!gameActive) return;
+        let targetIdx = -1;
+        for (let i = 0; i < notes.length; i++) {
+            if (notes[i].lane === 'both') { targetIdx = i; break; }
+        }
+        if (targetIdx === -1) { triggerScore('양발 노트를 기다리세요!', '#ff9f43', false); return; }
+        const note = notes[targetIdx];
+        const distance = noteDistance(note);
+        if (distance <= hitRange * 1.65) {
+            triggerScore(distance <= hitRange ? '양발 PERFECT!' : '양발 GOOD!', distance <= hitRange ? '#ffd700' : '#4dff4d', true);
+            score += 100;
+            note.element.remove(); notes.splice(targetIdx, 1);
+        } else {
+            judgeText.innerText = '양발 노트가 조금 더 가까이 올 때!';
+            judgeText.style.color = '#ffcc80';
+        }
+    }
+
+    function handleInput(lane, element) {
+        element.classList.add('active');
+        judgeLane(lane);
+        setTimeout(() => element.classList.remove('active'), 80);
+    }
+
+    let pendingBothInput = null;
+    const BOTH_INPUT_WINDOW = 105;
+    function hittableBothNote() {
+        return notes.some(note => note.lane === 'both' && noteDistance(note) <= hitRange * 1.8);
+    }
+    function fireTaikoInput(lane, source) {
+        reactToMassage(lane);
+        if (childMode) {
+            if (!gameActive) return;
+            const drum = lane === 'left' ? drumLeft : drumRight;
+            drum.classList.add('active'); setTimeout(() => drum.classList.remove('active'),100);
+            judgeChildNote(); return;
+        }
+        if (judgeRoll()) return;
+        const now = performance.now();
+        if (pendingBothInput && pendingBothInput.lane !== lane && now - pendingBothInput.time <= BOTH_INPUT_WINDOW) {
+            clearTimeout(pendingBothInput.timer);
+            pendingBothInput = null;
+            fireBothInput((source || '입력') + ' 동시');
+            return;
+        }
+        const element = lane === 'left' ? drumLeft : drumRight;
+        if (hittableBothNote()) {
+            if (pendingBothInput) clearTimeout(pendingBothInput.timer);
+            const pending = { lane, source, element, time:now, timer:null };
+            pending.timer = setTimeout(() => {
+                if (pendingBothInput !== pending) return;
+                pendingBothInput = null;
+                judgeText.innerText = '양발을 조금 더 동시에!';
+                judgeText.style.color = '#ffcc80';
+            }, BOTH_INPUT_WINDOW);
+            pendingBothInput = pending;
+            return;
+        }
+        handleInput(lane, element);
+        if (hardwareStatus && source && gameActive) hardwareStatus.innerText = source + ' 입력: ' + (lane === 'left' ? '왼발' : '오른발');
+    }
+
+    function fireBothInput(source) {
+        reactToMassage('both');
+        if (childMode) {
+            if (!gameActive) return;
+            drumBoth.classList.add('active'); setTimeout(() => drumBoth.classList.remove('active'),100);
+            judgeChildNote(); return;
+        }
+        if (judgeRoll()) return;
+        drumBoth.classList.add('active'); drumLeft.classList.add('active'); drumRight.classList.add('active');
+        judgeBoth();
+        setTimeout(() => { drumBoth.classList.remove('active'); drumLeft.classList.remove('active'); drumRight.classList.remove('active'); }, 100);
+        if (hardwareStatus && source && gameActive) hardwareStatus.innerText = source + ' 입력: 양발 동시';
+    }
+
+
+    function setHardwareStatus(message) {
+        if (hardwareStatus) hardwareStatus.innerText = message;
+    }
+
+    const gamepadState = {};
+    // PIU 실제 신호 순서: 0=왼쪽 위, 1=오른쪽 위, 2=가운데, 3=왼쪽 아래, 4=오른쪽 아래.
+    const gamepadLeftButtons = [0, 3];
+    const gamepadBothButtons = [2];
+    const gamepadRightButtons = [1, 4];
+    // 현장 Andamiro 발판에서 직접 측정한 첫 바이트 비트 매핑.
+    const pumpPanelByBit = {
+        1: { lane:'left',  name:'왼쪽 위' },
+        3: { lane:'left',  name:'왼쪽 아래' },
+        5: { lane:'both',  name:'가운데' },
+        2: { lane:'right', name:'오른쪽 아래' },
+        4: { lane:'right', name:'오른쪽 위' }
+    };
+    let hidConnectInProgress = false;
+
+    function readGamepadButton(button) {
+        if (!button) return false;
+        return button.pressed || button.value > 0.55;
+    }
+
+    function pollTaikoGamepads() {
+        const pads = navigator.getGamepads ? navigator.getGamepads() : [];
+        for (const pad of pads) {
+            if (!pad) continue;
+            if (!gamepadState[pad.index]) {
+                gamepadState[pad.index] = pad.buttons.map(readGamepadButton);
+            }
+            const prev = gamepadState[pad.index];
+            const current = pad.buttons.map(readGamepadButton);
+
+            for (const idx of gamepadBothButtons) {
+                if (current[idx] && !prev[idx]) fireBothInput('펌프 가운데');
+            }
+            for (const idx of gamepadLeftButtons) {
+                if (current[idx] && !prev[idx]) fireTaikoInput('left', '게임패드');
+            }
+            for (const idx of gamepadRightButtons) {
+                if (current[idx] && !prev[idx]) fireTaikoInput('right', '게임패드');
+            }
+
+            const leftAxis = (pad.axes[0] || 0) < -0.65 || (pad.axes[2] || 0) < -0.65;
+            const rightAxis = (pad.axes[0] || 0) > 0.65 || (pad.axes[2] || 0) > 0.65;
+            const prevLeftAxis = prev.__leftAxis || false;
+            const prevRightAxis = prev.__rightAxis || false;
+            if (leftAxis && !prevLeftAxis) fireTaikoInput('left', '게임패드');
+            if (rightAxis && !prevRightAxis) fireTaikoInput('right', '게임패드');
+
+            current.__leftAxis = leftAxis;
+            current.__rightAxis = rightAxis;
+            gamepadState[pad.index] = current;
+        }
+        requestAnimationFrame(pollTaikoGamepads);
+    }
+    requestAnimationFrame(pollTaikoGamepads);
+
+    async function connectTaikoHid() {
+        if (hidConnectInProgress) return;
+        hidConnectInProgress = true;
+
+        if (!('hid' in navigator)) {
+            setHardwareStatus('이 브라우저는 WebHID를 지원하지 않습니다. 게임패드 모드나 키보드 매핑을 사용하세요.');
+            hidConnectInProgress = false;
+            return;
+        }
+
+        try {
+            const devices = await navigator.hid.requestDevice({ filters: [] });
+            if (!devices.length) {
+                setHardwareStatus('선택된 북 하드웨어가 없습니다.');
+                hidConnectInProgress = false;
+                return;
+            }
+
+            for (const device of devices) {
+                if (!device.opened) await device.open();
+                device.__prevReport = null;
+                device.addEventListener('inputreport', (event) => {
+                    const bytes = Array.from(new Uint8Array(event.data.buffer));
+                    // Andamiro 발판은 Active-Low: 밟으면 해당 비트가 1→0으로 내려간다.
+                    // 측정된 신호는 Active-Low이며 B0.1/B0.3/B0.5/B0.2/B0.4를 사용한다.
+                    const value = bytes[0] == null ? 0xff : bytes[0];
+                    const prevValue = device.__prevReport ? device.__prevReport[0] : 0xff;
+                    const newlyPressed = prevValue & ~value & 0x3e;
+                    for (const bitText of Object.keys(pumpPanelByBit)) {
+                        const bit = Number(bitText);
+                        if (!(newlyPressed & (1 << bit))) continue;
+                        const panel = pumpPanelByBit[bit];
+                        if (panel.lane === 'both') fireBothInput('북 ' + panel.name);
+                        else fireTaikoInput(panel.lane, '북 ' + panel.name);
+                    }
+                    device.__prevReport = bytes;
+                });
+            }
+
+            setHardwareStatus('북 연결됨: 왼쪽 북=왼발 / 양쪽 북=양발 / 오른쪽 북=오른발');
+        } catch (error) {
+            setHardwareStatus('WebHID 연결이 취소되었거나 실패했습니다. 게임패드 모드로 인식되면 자동 연동됩니다.');
+        } finally {
+            hidConnectInProgress = false;
+        }
+    }
+
+    function onTimeUpdate() {
+        const pct = Math.min(100, (audio.currentTime / effectiveDuration) * 100);
+        progressBar.style.width = pct + '%';
+        songTimeEl.innerText = formatTime(audio.currentTime) + ' / ' + formatTime(effectiveDuration);
+
+        if (gameActive && audio.currentTime >= effectiveDuration) finishSong();
+    }
+
+    function onAudioEnded() {
+        if (gameActive) finishSong();
+    }
+
+    function finishSong() {
+        resetMassageScene();
+        gameActive = false;
+        audio.pause();
+        stopIndianTrack();
+
+        resScore.innerText = String(score).padStart(6, '0');
+        resMaxCombo.innerText = maxCombo;
+        resHits.innerText = hitCount;
+        resMiss.innerText = missCount;
+        resultPlayerName.innerText = (playerName || 'PLAYER').toUpperCase();
+        arcadeNewRecord.classList.remove('show');
+        arcadeRankList.innerHTML = '<div class="arcade-rank-loading">LOADING...</div>';
+
+        endOverlay.style.display = 'flex';
+
+        saveScoreAndShowRanking();
+
+        let secondsLeft = 8;
+        autoReturnNote.innerText = `${secondsLeft}초 후 자동으로 처음 화면으로 돌아갑니다`;
+        autoReturnTimer = setInterval(() => {
+            secondsLeft--;
+            if (secondsLeft <= 0) {
+                clearInterval(autoReturnTimer);
+                returnToStart();
+            } else {
+                autoReturnNote.innerText = `${secondsLeft}초 후 자동으로 처음 화면으로 돌아갑니다`;
+            }
+        }, 1000);
+    }
+
+    function escapeHtml(str) {
+        const div = document.createElement('div');
+        div.innerText = str;
+        return div.innerHTML;
+    }
+
+    async function saveScoreAndShowRanking() {
+        const key = 'kimSeeunFootMassageTop10';
+        let entries = [];
+        try { entries = JSON.parse(localStorage.getItem(key) || '[]'); } catch (e) { entries = []; }
+        entries.push({ name: (playerName || 'PLAYER').toUpperCase(), score, maxCombo, savedAt: Date.now() });
+        entries.sort((a, b) => b.score - a.score || b.maxCombo - a.maxCombo);
+        entries = entries.slice(0, 10);
+        localStorage.setItem(key, JSON.stringify(entries));
+        if (entries[0] && entries[0].score === score) arcadeNewRecord.classList.add('show');
+        arcadeRankList.innerHTML = entries.map((e, i) =>
+            `<div class="arcade-rank-row"><span class="ar-rank">${i + 1}.</span><span class="ar-name">${escapeHtml(e.name || 'PLAYER')}</span><span class="ar-score">${Number(e.score).toLocaleString()}점</span></div>`
+        ).join('');
+    }
+
+    function returnToStart() {
+        resetMassageScene();
+        if (autoReturnTimer) { clearInterval(autoReturnTimer); autoReturnTimer = null; }
+
+        audio.pause();
+        stopIndianTrack();
+        audio.currentTime = 0;
+        audio.removeEventListener('timeupdate', onTimeUpdate);
+        audio.removeEventListener('ended', onAudioEnded);
+
+        score = 0; combo = 0; maxCombo = 0; hitCount = 0; missCount = 0;
+        updateDancers();
+        noteIndex = 0; songEnded = false;
+        notes.forEach(n => n.element.remove());
+        notes = [];
+
+        scoreVal.innerText = '점수: 0';
+        comboVal.innerText = '콤보: 0';
+        judgeText.innerText = '입력 대기중';
+        judgeText.style.color = '#fff';
+        progressBar.style.width = '0%';
+        songTimeEl.innerText = '0:00 / 0:00';
+        currentDiff.innerText = '선택 대기중';
+        selectedSong.innerText = '곡을 선택할 난이도를 골라주세요';
+        currentDiff.style.color = '#55efc4';
+
+        endOverlay.style.display = 'none';
+        startOverlay.style.display = 'flex';
+        diffButtons.forEach(b => b.disabled = false);
+        nameWarning.classList.remove('show');
+    }
+
+    function reallyStartGame(difficulty) {
+        resetMassageScene();
+        startIndianTrack(difficulty);
+        childMode = difficulty === 'easy';
+        const cfg = difficultyConfig[difficulty];
+        noteSpeed = cfg.noteSpeed;
+        effectiveDuration = Math.min(SONG_DURATION, Number.isFinite(audio.duration) ? audio.duration : SONG_DURATION);
+        noteMap = NOTE_MAPS[cfg.mapKey].filter(n => n.t < effectiveDuration - 0.5);
+        const chartDifficulty = difficulty === 'normal' ? 'easy' : difficulty;
+        const specialNotes = [
+            {t:12.4,lane:'left'}, {t:16.8,lane:'right'},
+            {t:21.2,lane:'roll',hitsNeeded:chartDifficulty==='easy'?12:chartDifficulty==='normal'?16:20,duration:3.8},
+            {t:31.4,lane:'left'}, {t:35.1,lane:'right'},
+            {t:43.6,lane:'roll',hitsNeeded:chartDifficulty==='easy'?14:chartDifficulty==='normal'?18:22,duration:4.2},
+            {t:55.4,lane:'left'}, {t:58.1,lane:'right'},
+            {t:60.5,lane:'left'}, {t:61.4,lane:'right'},
+            {t:62.5,lane:'roll',hitsNeeded:chartDifficulty==='easy'?14:chartDifficulty==='normal'?18:24,duration:4.0},
+            {t:67.2,lane:'left'}, {t:68.0,lane:'right'},
+            {t:69.2,lane:'roll',hitsNeeded:chartDifficulty==='easy'?14:chartDifficulty==='normal'?18:24,duration:4.2}
+        ];
+        noteMap = noteMap.filter(n => !specialNotes.some(s => s.lane === 'roll'
+            ? n.t >= s.t - 0.5 && n.t <= s.t + s.duration + 0.3
+            : Math.abs(s.t - n.t) < 0.48)).concat(specialNotes).sort((a,b) => a.t-b.t);
+        const bothEvery = chartDifficulty === 'easy' ? 18 : chartDifficulty === 'normal' ? 12 : 8;
+        noteMap = noteMap.map((n, i) => (i > 3 && i % bothEvery === 0 && (n.lane === 'left' || n.lane === 'right')) ? { t:n.t, lane:'both' } : n);
+        if (childMode) {
+            // One gentle tap every 3.3 seconds; no simultaneous or roll notes.
+            noteMap = Array.from({length:21},(_,i)=>({t:4.5+i*3.3,lane:i%2?'right':'left'}));
+        }
+        noteIndex = 0;
+
+        if (difficulty === 'easy') {
+            currentDiff.innerText = '쉬움';
+            currentDiff.style.color = '#2ecc71';
+        } else if (difficulty === 'normal') {
+            currentDiff.innerText = '보통';
+            currentDiff.style.color = '#f1c40f';
+        } else if (difficulty === 'hard') {
+            currentDiff.innerText = '어려움';
+            currentDiff.style.color = '#e74c3c';
+        }
+
+        computeLeadTime();
+
+        loadingOverlay.style.display = 'none';
+        startOverlay.style.display = 'none';
+        endOverlay.style.display = 'none';
+
+        gameActive = true;
+        songEnded = false;
+        progressBar.style.width = '0%';
+
+        audio.currentTime = 0;
+        audio.addEventListener('timeupdate', onTimeUpdate);
+        audio.addEventListener('ended', onAudioEnded);
+        audio.play().catch((error) => {
+            console.error('음악 재생 실패:', error);
+            gameActive = false;
+            returnToStart();
+            setHardwareStatus('음악을 재생하지 못했습니다. 난이도를 눌러 다시 시작하세요.');
+        });
+
+        requestAnimationFrame(gameLoop);
+    }
+
+    function enterGameFullscreen() {
+        root.classList.add('game-fullscreen');
+        const page = document.documentElement;
+        const request = page.requestFullscreen || page.webkitRequestFullscreen || page.msRequestFullscreen;
+        if (!document.fullscreenElement && !document.webkitFullscreenElement && request) {
+            try {
+                const result = request.call(page);
+                if (result && result.catch) result.catch(() => {});
+            } catch (e) {}
+        }
+    }
+
+    function startGame(difficulty) {
+        if (musicLoading || gameActive) return;
+        musicLoading = true;
+        const name = playerNameInput.value.trim() || '영주한국효문화진흥원';
+        nameWarning.classList.remove('show');
+        playerName = name;
+        enterGameFullscreen();
+        diffButtons.forEach(b => b.disabled = true);
+        startOverlay.style.display = 'none';
+        loadingOverlay.style.display = 'flex';
+
+        audio.pause();
+        selectedMusicTrack = musicTracks[Math.floor(Math.random() * musicTracks.length)];
+        audio.src = selectedMusicTrack.src;
+        let settled = false;
+        let readyTimer;
+        const cleanup = () => {
+            clearTimeout(readyTimer);
+            audio.removeEventListener('canplay', onReady);
+            audio.removeEventListener('error', onError);
+        };
+        const onReady = () => {
+            if (settled) return;
+            settled = true;
+            musicLoading = false;
+            cleanup();
+            reallyStartGame(difficulty);
+        };
+        const onError = () => {
+            if (settled) return;
+            settled = true;
+            musicLoading = false;
+            cleanup();
+            loadingOverlay.style.display = 'none';
+            returnToStart();
+            setHardwareStatus('음악을 불러오지 못했습니다. 난이도를 눌러 다시 시작하세요.');
+        };
+        audio.addEventListener('canplay', onReady);
+        audio.addEventListener('error', onError);
+        audio.load();
+        readyTimer = setTimeout(() => {
+            if (!settled && audio.readyState >= 2) onReady();
+        }, 1500);
+    }
+
+    function setupButton(id, difficulty) {
+        const btn = root.querySelector('#' + id);
+        const handler = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            enterGameFullscreen();
+            startGame(difficulty);
+        };
+        btn.addEventListener('touchstart', handler, { passive: false });
+        btn.addEventListener('click', handler);
+    }
+
+    setupButton('btn-easy', 'easy');
+    setupButton('btn-normal', 'normal');
+    setupButton('btn-hard', 'hard');
+
+    const cultureIntro = document.getElementById('culture-video-intro');
+    const cultureVideo = document.getElementById('culture-intro-video');
+    const cultureCard = cultureIntro.querySelector('.culture-intro-card');
+    const cultureIntroNext = document.getElementById('culture-intro-next');
+    const beginIntroAutomatically = () => {
+        if (!document.fullscreenElement && document.documentElement.requestFullscreen) document.documentElement.requestFullscreen().catch(() => {});
+        cultureVideo.muted = true;
+        cultureVideo.play().catch(() => {});
+        setTimeout(() => cultureCard.classList.add('playing'), 2200);
+    };
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', beginIntroAutomatically, { once:true });
+    else beginIntroAutomatically();
+    const closeCultureIntro = () => {
+        cultureIntro.style.display = 'none';
+        cultureVideo.pause();
+    };
+    cultureIntroNext.addEventListener('click', closeCultureIntro);
+    cultureVideo.addEventListener('ended', () => {
+        cultureCard.classList.remove('playing');
+        cultureIntroNext.style.display = 'inline-block';
+    });
+
+    lengthButtons.forEach(btn => {
+        const handler = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            songLengthMode = btn.dataset.mode;
+            lengthButtons.forEach(b => b.classList.toggle('active', b === btn));
+        };
+        btn.addEventListener('touchstart', handler, { passive: false });
+        btn.addEventListener('click', handler);
+    });
+
+    const restartHandler = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        returnToStart();
+    };
+    restartBtn.addEventListener('touchstart', restartHandler, { passive: false });
+    restartBtn.addEventListener('click', restartHandler);
+
+    if (hardwareConnectBtn) {
+        hardwareConnectBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            connectTaikoHid();
+        });
+        hardwareConnectBtn.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            connectTaikoHid();
+        }, { passive: false });
+    }
+
+    window.addEventListener('gamepadconnected', (e) => {
+        setHardwareStatus('북 연결됨: 왼쪽 북=왼발 / 양쪽 북=양발 / 오른쪽 북=오른발');
+    });
+    window.addEventListener('gamepaddisconnected', () => {
+        setHardwareStatus('게임패드 연결 해제됨. 키보드 또는 WebHID 연결을 사용할 수 있습니다.');
+    });
+
+    drumLeft.addEventListener('touchstart', (e) => { e.preventDefault(); fireTaikoInput('left', '터치'); }, { passive: false });
+    drumRight.addEventListener('touchstart', (e) => { e.preventDefault(); fireTaikoInput('right', '터치'); }, { passive: false });
+    drumBoth.addEventListener('touchstart', (e) => { e.preventDefault(); fireBothInput('터치'); }, { passive: false });
+    drumLeft.addEventListener('mousedown', (e) => { e.preventDefault(); fireTaikoInput('left', '마우스'); });
+    drumRight.addEventListener('mousedown', (e) => { e.preventDefault(); fireTaikoInput('right', '마우스'); });
+    drumBoth.addEventListener('mousedown', (e) => { e.preventDefault(); fireBothInput('마우스'); });
+
+    window.addEventListener('keydown', (e) => {
+        if (e.repeat) return;
+        const key = e.key.toLowerCase();
+        if (e.code === 'Space' || key === 'g') { e.preventDefault(); fireBothInput('키보드'); return; }
+        if (e.key === 'ArrowLeft' || key === 'z' || key === 'f' || key === 'a' || key === 's') fireTaikoInput('left', '키보드/왼쪽 북');
+        if (e.key === 'ArrowRight' || key === 'j' || key === 'd' || key === 'k' || key === 'l') fireTaikoInput('right', '키보드');
+    });
+})();
+</script>
+</body>
+</html>
