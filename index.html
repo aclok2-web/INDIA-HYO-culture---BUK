@@ -513,8 +513,15 @@
     }
     .culture-intro-card h1 { color:#ffd15c; font-size:clamp(1.8rem,5vw,3.2rem); margin-bottom:18px; }
     .culture-intro-card p { font-size:clamp(.95rem,2.2vw,1.2rem); line-height:1.8; }
-    #culture-intro-next { margin-top:24px; padding:14px 32px; border:0; border-radius:999px; background:#ffd15c; color:#3b1024; font-weight:900; font-size:1rem; cursor:pointer; }
-    #culture-intro-next { display:none; }
+    #culture-intro-next {
+        position: absolute; right: max(20px, env(safe-area-inset-right));
+        bottom: max(20px, env(safe-area-inset-bottom)); z-index: 2;
+        min-height: 48px; padding: 14px 32px; border: 2px solid #fff1b8;
+        border-radius: 999px; background: #ffd15c; color: #3b1024;
+        box-shadow: 0 4px 20px rgba(0,0,0,.55);
+        font-weight: 900; font-size: 1.1rem; cursor: pointer; touch-action: manipulation;
+    }
+    #culture-intro-next:focus-visible { outline: 3px solid white; outline-offset: 4px; }
     .culture-intro-card.playing { opacity:0; pointer-events:none; transition:opacity .35s ease; }
     #dancer-stage { position:absolute; inset:auto 0 112px; height:150px; z-index:2; pointer-events:none; display:flex; align-items:flex-end; justify-content:space-around; overflow:hidden; }
     .india-dancer { display:none; width:90px; height:130px; background-image:url('india-dance-sprites.png'); background-size:500% 200%; filter:drop-shadow(0 8px 7px rgba(0,0,0,.7)); animation:danceHop .7s ease-in-out infinite alternate; }
@@ -593,8 +600,8 @@
     <div class="culture-intro-card">
         <h1>세계의 효 : 인도(프리남)</h1>
         <p><strong>프리남(Pranam)</strong>은 두 손을 모으고 몸을 숙여 존경을 전하는 인도의 인사 문화입니다.<br>어른의 발을 만지는 행동에는 부모와 스승께 감사와 축복을 구하는 마음이 담겨 있습니다.<br>영상을 본 뒤, 인도 대표 영화 음악의 리듬에 맞춰 발마사지 게임을 즐겨 보세요.</p>
-        <button id="culture-intro-next" type="button">게임 준비 화면으로</button>
     </div>
+    <button id="culture-intro-next" type="button" aria-label="영상을 넘기고 게임 준비 화면으로 이동">넘기기</button>
 </div>
 
 <div id="taiko-game-root">
